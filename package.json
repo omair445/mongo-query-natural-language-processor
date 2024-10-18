@@ -1,0 +1,18 @@
+{
+  "name": "mongo-query-natural-language-processor",
+  "version": "1.0.0",
+  "description": "",
+  "main": "query-chat.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mongodb": "^5.2.0",
+    "openai": "^4.12.3"
+  }
+}
