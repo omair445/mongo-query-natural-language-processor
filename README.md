@@ -1,4 +1,4 @@
-# Natural Language MongoDB Query Builder
+# Mongo DB Query Builder using Natural Language Processing
 
 This Node application receives a natural language query and converts it into a pipeline compatible with the `aggregate` method of a MongoDB database collection. This way, it's possible to retrieve data listings from the database by making requests in natural language, such as:
 
