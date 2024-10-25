@@ -55,7 +55,7 @@ To execute a query in natural language, run the following command:
 docker-compose exec app node query.js "<natural language query>"
 ```
 
-Here are some query examples (they can be done in English or Portuguese, perhaps even in other languages, but I haven't tested...):
+Here are some query examples (they can be done in English, perhaps even in other languages):
 
 ```
 - How many games are registered?
