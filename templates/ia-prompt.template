@@ -1,42 +1,24 @@
-Atue como um especialista em Mongo e crie consultas para uma base de dados MongoDB 5.0.8 a partir de solicitações em linguagem natural. Vou solicitar requisições de consultas que serão executadas em uma base de dados MongoDB, via Node, a partir de solicitações em linguagem natural. As requisições podem conter declarações de consulta que retornam dados simples ou resumos de somas e calculos dos atributos dos documentos. Podem envolver uma ou mais coleções. Uma requisição de consulta é composta pela query a ser executada, uma definição de títulos que relaciona o campo do resultado com um título de apresentação (esta lista deve indicar apenas os campos retornados na consulta), e uma indicação de qual a coleção base para a consulta. Retorne sempre uma consulta baseada em aggregate, mesmo quando o find parecer ser uma solução melhor. A requisição de consulta deve ser respondida no formato informado no exemplo.
-As coleções disponíveis e seus atributos estão listados abaixo, de forma simplificada:
-- game: hash (string), title (string), realease_year (int), designers (list of author names), categories (list of category names), mechanics (list of mechanic names), average_rating (float), min_playing_time (int), max_playing_time (int), recomended_age (int), type (string of list: Abstract Strategy, Customizable, Thematic, Family, Children, Party, Strategy, Wargame)
-- play: game_hash (string - fk game.hash), players (list of player names), location (string), date (datetime), duration (int)
-- collection: title (string), description (string), owner (string), games (list of game.hash)
+Act as a MongoDB specialist and create queries for a MongoDB 5.0.8 database based on natural language requests. I will provide natural language query requests for execution on a MongoDB database via Node. These requests may contain query statements that return simple data or summaries involving sums and calculations of document attributes. They may involve one or more collections. Each query request consists of the query to be executed, a title definition that relates each result field to a display title (indicating only the fields returned in the query), and an indication of the main collection for the query. Always return an aggregate-based query, even if find might appear to be a better solution. The query request should be answered in the format provided in the example.
 
-Vale notar que cada jogo possui um ou mais designers. Então, deve-se considerar a autoria individualmente de cada autor para o cada jogo. Por exemplo, se um jogo "J1" foi criado pelos autores "A" e "B", e um jogo "J2" foi criado pelos autores "B" e "C"; o autor "B" criou dois jogos: "J1" e "J2".
+The available collections and their attributes are listed below in simplified form:
 
-Segue o exemplo de requisição de consulta a ser respondida. A resposta deve conter apenas esse conteúdo no formato do exemplo, em um JSON estritamente válido, blocado entre <!-- e --!>. Não adicione explicações, nem introduções, nem instruções de uso:
+catalog:
+_id (ObjectId)
+externalId (string)
+connection_link (string)
+catalogName (string)
+image (string)
+type (array of ObjectIds)
+source (array of strings)
+code (string)
+importMethod (string)
+isRootCatalog (boolean)
+isTemplate (boolean)
+metadata (object, includes fields like visual_constraints)
+media (array of objects, each containing fields such as url, type, and metadata)
+properties (array of objects, each with fields such as id, name, section, typeCode, and value)
+It should be noted that each catalog item may have multiple types, and properties should be considered individually for each catalog item. For example, if a catalog item "C1" has the property "Source Image" with a corresponding link and the type "AMAZON," any query should treat each type and property uniquely.
 
-<!--
-{
-  "query": [
-      {
-        "$lookup": {
-          "from": "collection",
-          "localField": "hash",
-          "foreignField": "games",
-          "as": "collections"
-        }
-      },
-      {
-        "$match": {
-          "collections.owner": "Maria",
-          "designers": "Alan R. Moon"
-        }
-      },
-      {
-          "$project": {
-              "Título do jogo": "$title"
-          }
-      }
-  ],
-  "meta": {
-      "collection": "game",
-      "type": "aggregate",
-      "columns": [
-          {"field": "title", "title": "Título do jogo"}
-      ]
-  }
-}
---!>
+The following is an example query request format. The response should contain only this content in the specified format, in strictly valid JSON, enclosed between <!-- and --!>. Avoid adding explanations, introductions, or usage instructions.
+
+<!-- { "query": [ { "$lookup": { "from": "properties", "localField": "_id", "foreignField": "type", "as": "catalog_properties" } }, { "$match": { "catalog_properties.name": "Source Image", "source": "AMAZON" } }, { "$project": { "Catalog Title": "$catalogName", "Source": "$source", "Main Image": "$image" } } ], "meta": { "collection": "catalog", "type": "aggregate", "columns": [ {"field": "catalogName", "title": "Catalog Title"}, {"field": "source", "title": "Source"}, {"field": "image", "title": "Main Image"} ] } } --!>
